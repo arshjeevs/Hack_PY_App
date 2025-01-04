@@ -1,5 +1,5 @@
 import streamlit as st
-import fitz  # PyMuPDF
+import PyPDF2  # instead of import fitz
 import numpy as np
 from typing import List, Tuple
 import faiss
@@ -53,11 +53,11 @@ def get_cache_path(filename: str) -> Path:
 def extract_text_from_pdf(pdf_file) -> str:
     """Extract text from uploaded PDF file"""
     try:
-        pdf_document = fitz.open(stream=pdf_file.read(), filetype="pdf")
+        # New implementation using PyPDF2
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
         text = ""
-        for page_num in range(pdf_document.page_count):
-            page = pdf_document[page_num]
-            text += page.get_text()
+        for page in pdf_reader.pages:
+            text += page.extract_text()
         return text
     except Exception as e:
         st.error(f"Error extracting text from PDF: {str(e)}")
