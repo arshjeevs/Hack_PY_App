@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-jose
+passlib[bcrypt]
+python-dotenv
+motor  # async MongoDB driver
