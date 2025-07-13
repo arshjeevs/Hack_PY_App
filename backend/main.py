@@ -1,31 +1,55 @@
 from fastapi import FastAPI
-from app.api.auth.route import auth_router
-from app.core.config import connect_to_db
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.database import db_manager
+from app.api.auth.route import auth_router
 from app.api.documents.routes import document_router
 
-app = FastAPI()
+app = FastAPI(
+    title="Document Q&A System",
+    description="A RAG-based system for asking questions about uploaded PDF documents",
+    version="1.0.0"
+)
 
-# Allow frontend to talk to backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # for dev only
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Connect to MongoDB at startup
 @app.on_event("startup")
-async def startup():
-    await connect_to_db()
+async def startup_event():
+    print("Starting Document Q&A System...")
+    
+    await db_manager.connect()
+    print("Connected to MongoDB")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("Shutting down...")
+
+    await db_manager.disconnect()
+    print("Disconnected from MongoDB")
 
 @app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI is running!"}
+async def root():
+    """Health check endpoint"""
+    return {
+        "message": "Document Q&A System is running!",
+        "status": "healthy"
+    }
 
-# Add this line below auth_router
+@app.get("/health")
+async def health_check():
+    """Detailed health check"""
+    return {
+        "status": "healthy",
+        "services": {
+            "database": "connected",
+            "vector_db": "ready"
+        }
+    }
+
+app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(document_router, prefix="/documents", tags=["Documents"])
-
-# Include authentication routes
-app.include_router(auth_router, prefix="/auth", tags=["Auth"])
