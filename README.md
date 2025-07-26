@@ -1,4 +1,3 @@
-````markdown
 # 📚 PDF Chat with RAG
 
 A lightweight **Retrieval-Augmented Generation (RAG)** application that allows users to upload a PDF and **chat with its contents**. Built using `Gradio`, `SentenceTransformers`, `FAISS`, and `TinyLlama`, this tool provides contextual answers to user queries based solely on the PDF content.
@@ -185,4 +184,4 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 ```
-```
+
