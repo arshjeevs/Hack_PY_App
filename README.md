@@ -180,8 +180,3 @@ This project is licensed under the [MIT License](LICENSE).
 * [SentenceTransformers](https://www.sbert.net/)
 * [FAISS by Facebook AI](https://github.com/facebookresearch/faiss)
 * [Gradio](https://gradio.app)
-
----
-
-```
-
